@@ -21,5 +21,7 @@ from .views import *
 
 urlpatterns = [
     path('vendor/', VendorCreate.as_view(), name="VendorCreate"),
+    path('vendor/<int:pk>/', VendorDetails.as_view(), name="VendorDetails"),
     path('purchase_orders/', PurchaseOrderCreate.as_view(), name="PurchaseOrderCreate" )
-]
+    
+    ]

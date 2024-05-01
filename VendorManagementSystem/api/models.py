@@ -1,28 +1,30 @@
 from django.db import models
-import uuid
 
+# Vendor Model
 class Vendor(models.Model):
-    name=models.CharField(max_length=200)
-    contact_details=models.CharField(max_length=200)
-    address=models.CharField(max_length=200)
-    vendor_code= models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False, unique=True)
+    name=models.CharField(max_length=50)
+    contact_details=models.TextField(max_length=200)
+    address=models.TextField(max_length=200)
+    vendor_code= models.CharField(max_length=100)
+    on_time_delivery_rate=models.FloatField()
+    quality_rating_avg=models.FloatField()
+    average_response_time=models.FloatField()
+    fulfillment_rate=models.FloatField()
+
 
     def __str__(self):
         return self.name
-
+    
+# Purchase Order Model
 class PurchaseOrder(models.Model):
-    po_number = models.CharField(max_length=50, unique=True, blank=True, null=True, editable=False)
-    vendor_reference = models.CharField(max_length=100)
-    order_date = models.DateField(auto_now_add=True)
-    items = models.TextField()
-    quantity = models.IntegerField()
-    status = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        # Generate a unique PO number using UUID
-        if not self.po_number:
-            self.po_number = str(uuid.uuid4())[:8].upper()
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.po_number
+    po_number = models.CharField(max_length=100)
+    vendor=models.ForeignKey(Vendor,on_delete=models.CASCADE, related_name='Purchase_Order')
+    order_date = models.DateTimeField()
+    delivery_date=models.DateTimeField()
+    items=models.JSONField()
+    quantity=models.IntegerField()
+    status = models.CharField(max_length=100)
+    quality_rating = models.FloatField()
+    issue_date=models.DateTimeField()
+    acknowledgment_date=models.DateTimeField(null =True) 
+    
