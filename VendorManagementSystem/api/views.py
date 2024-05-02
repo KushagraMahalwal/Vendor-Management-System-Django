@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 # from rest_framework import filters
+from rest_framework import generics
+
 
 # vendor create/list
 class VendorCreate(APIView):
@@ -23,7 +25,6 @@ class VendorCreate(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 # vendor details 
 class VendorDetails(APIView):
@@ -57,8 +58,8 @@ class VendorDetails(APIView):
 
 # Purchase Order  
 class PurchaseOrderCreate(APIView):
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['vendor__name']
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['vendor__name']
     def get(self,request):
         order=PurchaseOrder.objects.all()
         serializer=PurchaseOrderSerializer(order, many=True)
@@ -99,6 +100,13 @@ class PurchaseOrderDetails(APIView):
         order.delete()
         return Response({"msg":"Task Deleted"})
         
+    
+# Performance metrics
+class PerformanceRecordList(APIView):
+    def get(self,request,pk):
+        Performance=PerformanceRecord.objects.get(pk=pk)
+        serializer=PerformanceRecordSerializer(Performance)
+        return Response(serializer.data)
         
 
 

@@ -23,6 +23,7 @@ urlpatterns = [
     path('vendor/', VendorCreate.as_view(), name="VendorCreate"),
     path('vendor/<int:pk>/', VendorDetails.as_view(), name="VendorDetails"),
     path('purchase_orders/', PurchaseOrderCreate.as_view(), name="PurchaseOrderCreate" ),
-    path('purchase_orders/<int:pk>/',PurchaseOrderDetails.as_view(), name="PurchaseOrderDetails")
+    path('purchase_orders/<int:pk>/',PurchaseOrderDetails.as_view(), name="PurchaseOrderDetails"),
+    path('vendors/<int:pk>/performace',PerformanceRecordList.as_view(), name="PerformanceRecordList")
     
     ]
