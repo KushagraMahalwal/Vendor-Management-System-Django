@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 # from rest_framework import filters
 from rest_framework import generics
+from .func import *
 
 
 # vendor create/list
@@ -102,12 +103,39 @@ class PurchaseOrderDetails(APIView):
         
     
 # Performance metrics
-class PerformanceRecordList(APIView):
-    def get(self,request,pk):
-        Performance=PerformanceRecord.objects.get(pk=pk)
-        serializer=PerformanceRecordSerializer(Performance)
-        return Response(serializer.data)
+# class PerformanceRecordList(APIView):
+#     def get(self,request,pk):
+#         Performance=PerformanceRecord.objects.get(pk=pk)
+#         serializer=PerformanceRecordSerializer(Performance)
+#         return Response(serializer.data)
         
 
+class PerformanceRecord(APIView):
+    def get(self, request, pk):
+        try:
+            vendor = Vendor.objects.get(pk=pk)
+            # on_time_delivery_rate = calculate_on_time_delivery_rate(vendor)
+            # quality_rating_average = calculate_quality_rating_average(vendor)
+            # average_response_time = calculate_average_response_time(vendor)
+            # fulfillment_rate = calculate_fulfillment_rate(vendor)
+            # data = {
+            #     'vendor_id': vendor.id,
+            #     'vendor_name': vendor.name,
+            #     'on_time_delivery_rate': on_time_delivery_rate,
+            #     'quality_rating_average': quality_rating_average,
+            #     'average_response_time': average_response_time,
+            #     'fulfillment_rate': fulfillment_rate,
+            # }
 
+            data = {
+                'vendor_id': pk,
+                'vendor_name':vendor.name,
+                'on_time_delivery_rate': '0',
+                'quality_rating_average': '0',
+                'average_response_time': '0',
+                'fulfillment_rate': '0',
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except Vendor.DoesNotExist:
+            return Response({'error': 'Vendor not found'}, status=status.HTTP_404_NOT_FOUND)
     
