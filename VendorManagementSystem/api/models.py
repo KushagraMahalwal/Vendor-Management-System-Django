@@ -27,6 +27,9 @@ class PurchaseOrder(models.Model):
     quality_rating = models.FloatField()
     issue_date=models.DateTimeField()
     acknowledgment_date=models.DateTimeField(null =True) 
+
+    def __str__(self):
+        return self.po_number
     
 # Performance Evaluation
 class PerformanceRecord(models.Model):
