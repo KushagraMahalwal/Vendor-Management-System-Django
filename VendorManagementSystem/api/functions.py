@@ -29,7 +29,6 @@ def calculate_average_response_time(vendor):
     completed_pos_with_acknowledgment = PurchaseOrder.objects.filter(vendor=vendor, status='completed', acknowledgment_date__isnull=False)
     total_completed_pos = completed_pos_with_acknowledgment.count()
     if total_completed_pos > 0:
-        # response_times = (po.acknowledgment_date - po.issue_date).total_seconds() for po in completed_pos_with_acknowledgment
         response_times = [ (po.acknowledgment_date - po.issue_date).total_seconds() for po in completed_pos_with_acknowledgment ]
 
         average_response_time = sum(response_times) / total_completed_pos
