@@ -2,8 +2,7 @@ from .serializers import *
 from django.db.models import F
 from django.db.models import Sum
 
-
-
+# On Time Delivery Rate
 def calculate_on_time_delivery_rate(vendor):
     completed_pos = PurchaseOrder.objects.filter(vendor=vendor, status='completed')
     on_time_deliveries = completed_pos.filter(delivery_date__lte=F('delivery_date'))
@@ -14,6 +13,7 @@ def calculate_on_time_delivery_rate(vendor):
         on_time_delivery_rate = 0
     return on_time_delivery_rate
 
+# Quality Rating Average
 def calculate_quality_rating_average(vendor):
     completed_pos_with_rating = PurchaseOrder.objects.filter(vendor=vendor, status='completed', quality_rating__isnull=False)
     total_completed_pos = completed_pos_with_rating.count()
@@ -24,6 +24,7 @@ def calculate_quality_rating_average(vendor):
         quality_rating_average = 0
     return quality_rating_average
 
+# Average Response Time
 def calculate_average_response_time(vendor):
     completed_pos_with_acknowledgment = PurchaseOrder.objects.filter(vendor=vendor, status='completed', acknowledgment_date__isnull=False)
     total_completed_pos = completed_pos_with_acknowledgment.count()
@@ -36,6 +37,7 @@ def calculate_average_response_time(vendor):
         average_response_time = 0
     return average_response_time
 
+# Fullfillment Rate
 def calculate_fulfillment_rate(vendor):
     total_pos = PurchaseOrder.objects.filter(vendor=vendor).count()
     if total_pos > 0:

@@ -24,5 +24,6 @@ urlpatterns = [
     path('vendor/<int:pk>/', VendorDetails.as_view(), name="VendorDetails"),
     path('purchase_orders/', PurchaseOrderCreate.as_view(), name="PurchaseOrderCreate" ),
     path('purchase_orders/<int:pk>/',PurchaseOrderDetails.as_view(), name="PurchaseOrderDetails"),
-    path('vendor/<int:pk>/performance/',PerformanceRecord.as_view(), name="PerformanceRecord")
+    path('vendor/<int:pk>/performance/',PerformanceRecord.as_view(), name="PerformanceRecord"),
+    path('purchase_orders/<int:pk>/acknowledge/',AcknowledgePurchaseOrder.as_view() , name='AcknowledgePurchaseOrder'),
     ]

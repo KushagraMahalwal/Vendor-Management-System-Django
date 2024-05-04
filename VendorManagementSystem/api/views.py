@@ -8,12 +8,14 @@ from .functions import *
 from django.db.models import F
 from django.db.models import Sum
 from django.utils.timezone import make_aware
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
 # from django_filters.rest_framework import DjangoFilterBackend
 # from rest_framework import filters
 # from rest_framework import generics
 
 
-# vendor create/list
+# vendor create/list View
 class VendorCreate(APIView):
     # vender List
     def get(self,request):
@@ -21,7 +23,7 @@ class VendorCreate(APIView):
         serializer=VendorSerializer(vendor, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # Vendor Create
+    # Vendor Create View
     def post(self,request):
         serializer=VendorSerializer(data=request.data)
         if serializer.is_valid():
@@ -31,7 +33,7 @@ class VendorCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# vendor details 
+# vendor details View
 class VendorDetails(APIView):
     # Fetching vendor acc. to id
     def get(self,request, pk):
@@ -62,7 +64,7 @@ class VendorDetails(APIView):
         return Response({'data':'task deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# Purchase Order  
+# Purchase Order View
 class PurchaseOrderCreate(APIView):
     # filter_backends = [DjangoFilterBackend]
     # filterset_fields = ['vendor__name']
@@ -81,7 +83,7 @@ class PurchaseOrderCreate(APIView):
         return Response(serializer.errors)
 
 
-# PO Details   
+# PO Details view
 class PurchaseOrderDetails(APIView):
      # List PO acc. to Id
     def get(self,request,pk):
@@ -133,3 +135,30 @@ class PerformanceRecord(APIView):
         except Vendor.DoesNotExist:
             return Response({'error': 'Vendor not found'}, status=status.HTTP_404_NOT_FOUND)
     
+
+# Acknowledgment PO View
+class AcknowledgePurchaseOrder(APIView):
+    def post(self, request, pk):
+        # Retrieve the purchase order object
+        purchase_order = get_object_or_404(PurchaseOrder, pk=pk)
+
+        # Get the acknowledgment date from the request data
+        acknowledgment_date_str = request.data.get('acknowledgment_date')
+        if acknowledgment_date_str:
+            try:
+                # Parse the acknowledgment date string into a datetime object
+                acknowledgment_date = timezone.datetime.strptime(acknowledgment_date_str, '%Y-%m-%d')
+            except ValueError:
+                return Response({'error': 'Invalid date format. Please provide the date in YYYY-MM-DD format.'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                # Update the acknowledgment date
+                purchase_order.acknowledgment_date = acknowledgment_date
+                purchase_order.save()
+
+                # Trigger recalculation of average_response_time (implement your logic here)
+
+                return Response({'message': 'Purchase order acknowledged successfully.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Missing acknowledgment_date parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+
+       
