@@ -11,7 +11,7 @@ class Vendor(models.Model):
     average_response_time=models.FloatField()
     fulfillment_rate=models.FloatField()
 
-
+    # Names of vendor
     def __str__(self):
         return self.name
     
